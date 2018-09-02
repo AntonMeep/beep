@@ -1,0 +1,22 @@
+{
+	"name": "beep",
+	"description": "",
+	"authors": [
+		"Anton Fediushin"
+	],
+	"copyright": "Copyright © 2018, Anton Fediushin",
+	"license": "MIT",
+	"sourceFiles": ["beep.d"],
+	"importPaths": ["."],
+	"configurations": [
+		{
+			"name": "library"
+		},
+		{
+			"name": "unittest",
+			"dependencies": {
+				"silly": "*"
+			}
+		}
+	]
+}
