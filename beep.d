@@ -17,7 +17,7 @@ final class ExpectException : Exception {
 	}
 }
 
-auto expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, string msg = "", string file = __FILE__, size_t line = __LINE__)
+T1 expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, string msg = "", string file = __FILE__, size_t line = __LINE__)
 if(is(OP == equal) && __traits(compiles, lhs == rhs)) {
 	if(!(lhs == rhs))
 		throw new ExpectException(
@@ -25,6 +25,8 @@ if(is(OP == equal) && __traits(compiles, lhs == rhs)) {
 			file,
 			line,
 		);
+
+	return lhs;
 }
 
 @("expect!equal")
@@ -39,7 +41,7 @@ unittest {
 	S(null).expect!equal(S(null));
 }
 
-auto expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, string msg = "", string file = __FILE__, size_t line = __LINE__)
+T1 expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, string msg = "", string file = __FILE__, size_t line = __LINE__)
 if(is(OP == less) && __traits(compiles, lhs < rhs)) {
 	if(!(lhs < rhs))
 		throw new ExpectException(
@@ -47,6 +49,8 @@ if(is(OP == less) && __traits(compiles, lhs < rhs)) {
 			file,
 			line,
 		);
+
+	return lhs;
 }
 
 @("expect!less")
@@ -55,7 +59,7 @@ unittest {
 	1.expect!less(1.00001);
 }
 
-auto expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, string msg = "", string file = __FILE__, size_t line = __LINE__)
+T1 expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, string msg = "", string file = __FILE__, size_t line = __LINE__)
 if(is(OP == greater) && __traits(compiles, lhs > rhs)) {
 	if(!(lhs > rhs))
 		throw new ExpectException(
@@ -63,6 +67,8 @@ if(is(OP == greater) && __traits(compiles, lhs > rhs)) {
 			file,
 			line,
 		);
+
+	return lhs;
 }
 
 @("expect!greater")
@@ -71,7 +77,7 @@ unittest {
 	1.001.expect!greater(1);
 }
 
-auto expect(OP, T1)(lazy T1 lhs, string msg = "", string file = __FILE__, size_t line = __LINE__)
+T1 expect(OP, T1)(lazy T1 lhs, string msg = "", string file = __FILE__, size_t line = __LINE__)
 if(is(OP == nan) && __traits(compiles, {import std.math : isNaN; lhs.isNaN;})) {
 	import std.math : isNaN;
 	if(!lhs.isNaN)
@@ -80,6 +86,8 @@ if(is(OP == nan) && __traits(compiles, {import std.math : isNaN; lhs.isNaN;})) {
 			file,
 			line,
 		);
+
+	return lhs;
 }
 
 @("expect!nan")
