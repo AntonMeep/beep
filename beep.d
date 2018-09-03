@@ -41,6 +41,13 @@ unittest {
 	S(null).expect!equal(S(null));
 }
 
+@("expect!equal checks can be chained")
+unittest {
+	1.expect!equal(1)
+		.expect!equal(1)
+		.expect!equal(1);
+}
+
 T1 expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, string msg = "", string file = __FILE__, size_t line = __LINE__)
 if(is(OP == less) && __traits(compiles, lhs < rhs)) {
 	if(!(lhs < rhs))
@@ -57,6 +64,15 @@ if(is(OP == less) && __traits(compiles, lhs < rhs)) {
 unittest {
 	1.expect!less(2);
 	1.expect!less(1.00001);
+}
+
+@("expect!less checks can be chained")
+unittest {
+	1.expect!less(2)
+		.expect!less(3)
+		.expect!less(4)
+		.expect!less(5)
+		.expect!less(6);
 }
 
 T1 expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, string msg = "", string file = __FILE__, size_t line = __LINE__)
@@ -77,6 +93,16 @@ unittest {
 	1.001.expect!greater(1);
 }
 
+@("expect!greater checks can be chained")
+unittest {
+	1.expect!greater(0)
+		.expect!greater(-1)
+		.expect!greater(-2)
+		.expect!greater(-3)
+		.expect!greater(-4)
+		.expect!greater(-5);
+}
+
 T1 expect(OP, T1)(lazy T1 lhs, string msg = "", string file = __FILE__, size_t line = __LINE__)
 if(is(OP == nan) && __traits(compiles, {import std.math : isNaN; lhs.isNaN;})) {
 	import std.math : isNaN;
@@ -94,4 +120,12 @@ if(is(OP == nan) && __traits(compiles, {import std.math : isNaN; lhs.isNaN;})) {
 unittest {
 	float.init.expect!nan;
 	real.nan.expect!nan;
+}
+
+@("expect!nan checks can be chained")
+unittest {
+	real.nan.expect!nan
+		.expect!nan
+		.expect!nan
+		.expect!nan;
 }
