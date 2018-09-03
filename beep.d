@@ -3,7 +3,6 @@ module beep;
 import std.format : format;
 
 enum equal;
-enum unequal;
 enum less;
 enum greater;
 enum nan;
