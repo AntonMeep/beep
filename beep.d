@@ -9,31 +9,22 @@ enum greater;
 enum nan;
 
 final class ExpectException : Exception {
-	pure nothrow @nogc @safe this(string msg,
+	pure nothrow @safe this(string msg,
 								  string file = __FILE__,
 								  size_t line = __LINE__,
 								  Throwable nextInChain = null) {
-		super(msg, file, line, nextInChain);
+		super("Expectation failed: " ~ msg, file, line, nextInChain);
 	}
 }
 
 auto expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, string msg = "", string file = __FILE__, size_t line = __LINE__)
-if((is(OP == equal) || is(OP == unequal)) && __traits(compiles, lhs == rhs)) {
-	if(lhs == rhs) {
-		if(is(OP == unequal))
-			throw new ExpectException(
-				"`%s` is expected to not be equal to `%s`%s".format(lhs, rhs, msg.length ? " " ~ msg : ""),
-				file,
-				line,
-			);
-	} else {
-		if(is(OP == equal))
-			throw new ExpectException(
-				"`%s` is expected to be equal to `%s`%s".format(lhs, rhs, msg.length ? " " ~ msg : ""),
-				file,
-				line,
-			);
-	}
+if(is(OP == equal) && __traits(compiles, lhs == rhs)) {
+	if(!(lhs == rhs))
+		throw new ExpectException(
+			"`%s` is expected, got `%s`".format(rhs, lhs),
+			file,
+			line,
+		);
 }
 
 @("expect!equal")
@@ -48,17 +39,11 @@ unittest {
 	S(null).expect!equal(S(null));
 }
 
-@("expect!unequal")
-unittest {
-	1.expect!unequal(2);
-	"Hello!".expect!unequal("Hi!");
-}
-
 auto expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, string msg = "", string file = __FILE__, size_t line = __LINE__)
 if(is(OP == less) && __traits(compiles, lhs < rhs)) {
 	if(!(lhs < rhs))
 		throw new ExpectException(
-			"`%s` is expected to be less than `%s`%s".format(lhs, rhs, msg.length ? " " ~ msg : ""),
+			"value less than `%s` is expected, got`%s`".format(rhs, lhs),
 			file,
 			line,
 		);
@@ -74,7 +59,7 @@ auto expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, string msg = "", string file =
 if(is(OP == greater) && __traits(compiles, lhs > rhs)) {
 	if(!(lhs > rhs))
 		throw new ExpectException(
-			"`%s` is expected to be greater than `%s`%s".format(lhs, rhs, msg.length ? " " ~ msg : ""),
+			"value greater than `%s` is expected, got `%s`".format(rhs, lhs),
 			file,
 			line,
 		);
@@ -91,7 +76,7 @@ if(is(OP == nan) && __traits(compiles, {import std.math : isNaN; lhs.isNaN;})) {
 	import std.math : isNaN;
 	if(!lhs.isNaN)
 		throw new ExpectException(
-			"`%s` is expected to be NaN%s".format(lhs, msg.length ? " " ~ msg : ""),
+			"NaN is expected, got `%s`".format(lhs),
 			file,
 			line,
 		);
