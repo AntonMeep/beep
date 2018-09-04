@@ -6,6 +6,7 @@ enum equal;
 enum less;
 enum greater;
 enum nan;
+enum throw_;
 
 final class ExpectException : Exception {
 	pure nothrow @safe this(string msg,
@@ -127,4 +128,43 @@ unittest {
 		.expect!nan
 		.expect!nan
 		.expect!nan;
+}
+
+auto expect(OP, E : Exception = Exception, T1)(lazy T1 lhs, string msg = "", string file = __FILE__, size_t line = __LINE__)
+if(is(OP == throw_) && __traits(compiles, {lhs()();})) {
+	struct Result {
+		T1 data;
+		string message;
+	}
+
+	Result r = Result(lhs);
+
+	try {
+		lhs()();
+	} catch(Exception e) {
+		if(typeid(e) != typeid(E))
+			throw new ExpectException(
+				"`%s` is expected to be thrown, an exception of type `%s` has been thrown instead".format(
+					typeid(E).name,
+					typeid(e).name),
+				file,
+				line,
+			);
+
+		r.message = e.message.idup;
+		return r;
+	}
+
+	throw new ExpectException(
+		"`%s` is expected to be thrown, but nothing has been thrown".format(typeid(E).name),
+		file,
+		line,
+	);
+}
+
+@("expect!throw_")
+unittest {
+	({
+		throw new Exception("HEY");
+	}).expect!throw_;
 }
