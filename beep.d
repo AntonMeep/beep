@@ -75,7 +75,7 @@ T1 expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, string msg = "", string file = _
 if(is(OP == less) && __traits(compiles, lhs < rhs)) {
 	if(!(lhs < rhs))
 		throw new ExpectException(
-			"value less than `%s` is expected, got`%s`".format(rhs, lhs),
+			"value less than `%s` is expected, got `%s`".format(rhs, lhs),
 			file,
 			line,
 		);
@@ -96,6 +96,18 @@ unittest {
 		.expect!less(4)
 		.expect!less(5)
 		.expect!less(6);
+}
+
+@("expect!less fails if one value is not less than another")
+unittest {
+	({
+		1.expect!less(2)
+			.expect!less(3)
+			.expect!less(4)
+			.expect!less(0)
+			.expect!less(5);
+	}).expect!(throw_, ExpectException)
+		.message.expect!contain("value less than `0` is expected, got `1`");
 }
 
 T1 expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, string msg = "", string file = __FILE__, size_t line = __LINE__)
