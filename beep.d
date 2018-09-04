@@ -48,6 +48,29 @@ unittest {
 		.expect!equal(1);
 }
 
+@("expect!equal fails if two values are not equal")
+unittest {
+	({
+		1.expect!equal(2);
+	}).expect!(throw_, ExpectException)
+		.message.expect!contain("`2` is expected, got `1`");
+
+	({
+		"Hello, Alice!".expect!equal("Hello, Bob!");
+	}).expect!(throw_, ExpectException)
+		.message.expect!contain("`Hello, Bob!` is expected, got `Hello, Alice!`");
+
+	({
+		struct S {
+			string s;
+			int n;
+		}
+
+		S("Hi!", 42).expect!equal(S("Bye!", 43));
+	}).expect!(throw_, ExpectException)
+		.message.expect!contain("`S(\"Bye!\", 43)` is expected, got `S(\"Hi!\", 42)`");
+}
+
 T1 expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, string msg = "", string file = __FILE__, size_t line = __LINE__)
 if(is(OP == less) && __traits(compiles, lhs < rhs)) {
 	if(!(lhs < rhs))
