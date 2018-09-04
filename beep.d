@@ -6,6 +6,7 @@ enum equal;
 enum less;
 enum greater;
 enum nan;
+enum contain;
 enum throw_;
 
 final class ExpectException : Exception {
@@ -147,6 +148,35 @@ unittest {
 	func.expect!null;
 
 	null.expect!null;
+}
+
+auto expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, string msg = "", string file = __FILE__, size_t line = __LINE__)
+if(is(OP == contain) && __traits(compiles, {import std.algorithm.searching : canFind; lhs.canFind(rhs);})) {
+	import std.algorithm.searching : canFind;
+	if(!lhs.canFind(rhs))
+		throw new ExpectException(
+			"`%s` is expected to be found in `%s`".format(rhs, lhs),
+			file,
+			line,
+		);
+
+	return lhs;
+}
+
+@("expect!contain")
+unittest {
+	"Hello, World!".expect!contain("World");
+	[1,2,3].expect!contain(1);
+	[[1,2],[2,3],[4,5]].expect!contain([1,2]);
+}
+
+@("expect!contain checks can be chained")
+unittest {
+	"Hello, World!".expect!contain("World")
+		.expect!contain("Hello")
+		.expect!contain('!')
+		.expect!contain(',')
+		.expect!contain(' ');
 }
 
 auto expect(OP, E : Exception = Exception, T1)(lazy T1 lhs, string msg = "", string file = __FILE__, size_t line = __LINE__)
