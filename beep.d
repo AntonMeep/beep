@@ -149,6 +149,7 @@ if(is(OP == throw_) && __traits(compiles, {lhs(/+_+/)(/*_*/);})) {
 					typeid(e).name),
 				file,
 				line,
+				e,
 			);
 
 		r.message = e.message.idup;
