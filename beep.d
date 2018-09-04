@@ -191,3 +191,15 @@ unittest {
 		}).expect!(throw_, CustomException);
 	}).expect!(throw_, ExpectException);
 }
+
+@("expect!throw_ returns a tuple of the input data and message of the exception that has been thrown")
+unittest {
+	auto func = ({
+		throw new Exception("Hello!");
+	});
+	
+	auto result = func.expect!throw_;
+
+	(func is result.data).expect!equal(true);
+	is(typeof(result.message) == string).expect!equal(true);
+}
