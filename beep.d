@@ -131,7 +131,7 @@ unittest {
 }
 
 auto expect(OP, E : Exception = Exception, T1)(lazy T1 lhs, string msg = "", string file = __FILE__, size_t line = __LINE__)
-if(is(OP == throw_) && __traits(compiles, {lhs()();})) {
+if(is(OP == throw_) && __traits(compiles, {lhs(/+_+/)(/*_*/);})) {
 	struct Result {
 		T1 data;
 		string message;
@@ -142,7 +142,7 @@ if(is(OP == throw_) && __traits(compiles, {lhs()();})) {
 	try {
 		lhs()();
 	} catch(Exception e) {
-		if(typeid(e) != typeid(E))
+		if(!(cast(E) e))
 			throw new ExpectException(
 				"`%s` is expected to be thrown, an exception of type `%s` has been thrown instead".format(
 					typeid(E).name,
@@ -165,6 +165,29 @@ if(is(OP == throw_) && __traits(compiles, {lhs()();})) {
 @("expect!throw_")
 unittest {
 	({
-		throw new Exception("HEY");
+		throw new Exception("Hello!");
 	}).expect!throw_;
+}
+
+@("expect!(throw_, CustomException)")
+unittest {
+	final class CustomException : Exception {
+		pure nothrow @nogc @safe this(string msg) {
+			super(msg);
+		}
+	}
+
+	({
+		throw new CustomException("message");
+	}).expect!(throw_, CustomException);
+
+	({
+		throw new CustomException("message");
+	}).expect!(throw_, Exception);
+
+	({
+		({
+			throw new Exception("message");
+		}).expect!(throw_, CustomException);
+	}).expect!(throw_, ExpectException);
 }
