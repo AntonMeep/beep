@@ -201,5 +201,5 @@ unittest {
 	auto result = func.expect!throw_;
 
 	(func is result.data).expect!equal(true);
-	is(typeof(result.message) == string).expect!equal(true);
+	result.message.expect!equal("Hello!");
 }
