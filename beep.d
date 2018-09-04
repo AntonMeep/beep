@@ -204,3 +204,19 @@ unittest {
 	(func is result.data).expect!equal(true);
 	result.message.expect!equal("Hello!");
 }
+
+@("expect!throw_ does *not* catch Errors")
+unittest {
+	import core.exception : AssertError;
+
+	bool success;
+	try {
+		({
+			assert(false);
+		}).expect!throw_;
+	} catch(AssertError e) { // This is something nobody should ever do
+		success = true;
+	}
+
+	success.expect!equal(true);
+}
