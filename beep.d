@@ -130,6 +130,25 @@ unittest {
 		.expect!nan;
 }
 
+T1 expect(typeof(null) null_, T1)(lazy T1 lhs, string msg = "", string file = __FILE__, size_t line = __LINE__) {
+	if(lhs !is null)
+		throw new ExpectException(
+			"null is expected, got `%s`".format(lhs),
+			file,
+			line,
+		);
+
+	return lhs;
+}
+
+@("expect!null")
+unittest {
+	void delegate() func;
+	func.expect!null;
+
+	null.expect!null;
+}
+
 auto expect(OP, E : Exception = Exception, T1)(lazy T1 lhs, string msg = "", string file = __FILE__, size_t line = __LINE__)
 if(is(OP == throw_) && __traits(compiles, {lhs(/+_+/)(/*_*/);})) {
 	struct Result {
