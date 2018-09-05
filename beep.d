@@ -17,7 +17,9 @@ final class ExpectException : Exception {
 	}
 }
 
-T1 expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, string file = __FILE__, size_t line = __LINE__)
+struct Fence {}
+
+T1 expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, Fence _ = Fence(), string file = __FILE__, size_t line = __LINE__)
 if(is(OP == equal) && __traits(compiles, lhs == rhs)) {
 	if(!(lhs == rhs))
 		throw new ExpectException(
@@ -71,7 +73,7 @@ unittest {
 		.message.expect!contain("`S(\"Bye!\", 43)` is expected, got `S(\"Hi!\", 42)`");
 }
 
-T1 expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, string file = __FILE__, size_t line = __LINE__)
+T1 expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, Fence _ = Fence(), string file = __FILE__, size_t line = __LINE__)
 if(is(OP == less) && __traits(compiles, lhs < rhs)) {
 	if(!(lhs < rhs))
 		throw new ExpectException(
@@ -110,7 +112,7 @@ unittest {
 		.message.expect!contain("value less than `0` is expected, got `1`");
 }
 
-T1 expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, string file = __FILE__, size_t line = __LINE__)
+T1 expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, Fence _ = Fence(), string file = __FILE__, size_t line = __LINE__)
 if(is(OP == greater) && __traits(compiles, lhs > rhs)) {
 	if(!(lhs > rhs))
 		throw new ExpectException(
@@ -138,7 +140,7 @@ unittest {
 		.expect!greater(-5);
 }
 
-T1 expect(typeof(null) null_, T1)(lazy T1 lhs, string file = __FILE__, size_t line = __LINE__) {
+T1 expect(typeof(null) null_, T1)(lazy T1 lhs, Fence _ = Fence(), string file = __FILE__, size_t line = __LINE__) {
 	if(lhs !is null)
 		throw new ExpectException(
 			"null is expected, got `%s`".format(lhs),
@@ -157,7 +159,7 @@ unittest {
 	null.expect!null;
 }
 
-auto expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, string file = __FILE__, size_t line = __LINE__)
+auto expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, Fence _ = Fence(), string file = __FILE__, size_t line = __LINE__)
 if(is(OP == contain) && __traits(compiles, {import std.algorithm.searching : canFind; lhs.canFind(rhs);})) {
 	import std.algorithm.searching : canFind;
 	if(!lhs.canFind(rhs))
@@ -186,7 +188,7 @@ unittest {
 		.expect!contain(' ');
 }
 
-auto expect(OP, E : Exception = Exception, T1)(lazy T1 lhs, string file = __FILE__, size_t line = __LINE__)
+auto expect(OP, E : Exception = Exception, T1)(lazy T1 lhs, Fence _ = Fence(), string file = __FILE__, size_t line = __LINE__)
 if(is(OP == throw_) && __traits(compiles, {lhs(/+_+/)(/*_*/);})) {
 	struct Result {
 		T1 data;
