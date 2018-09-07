@@ -215,6 +215,14 @@ unittest {
 		.expect!match(r"[1-3]+[a-c]+");
 }
 
+@("expect!match fails if value does not match provided regex")
+unittest {
+	({
+		"123".expect!match(r"abc");
+	}).expect!(throw_, ExpectException)
+		.message.expect!contain("value matching `abc` is expected, got `123`");
+}
+
 auto expect(OP, E : Exception = Exception, T1)(lazy T1 lhs, Fence _ = Fence(), string file = __FILE__, size_t line = __LINE__)
 if(is(OP == throw_) && __traits(compiles, {lhs(/+_+/)(/*_*/);})) {
 	struct Result {
