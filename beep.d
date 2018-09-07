@@ -101,7 +101,7 @@ unittest {
 		.expect!less(6);
 }
 
-@("expect!less fails if one value is not less than another")
+@("expect!less fails if one value is not less than expected")
 unittest {
 	({
 		1.expect!less(2)
@@ -139,6 +139,17 @@ unittest {
 		.expect!greater(-3)
 		.expect!greater(-4)
 		.expect!greater(-5);
+}
+
+@("expect!greater fails if one value is not greater than expected")
+unittest {
+	({
+		1.expect!greater(0)
+			.expect!greater(-1)
+			.expect!greater(2)
+			.expect!greater(-3);
+	}).expect!(throw_, ExpectException)
+		.message.expect!contain("value greater than `2` is expected, got `1`");
 }
 
 T1 expect(typeof(null) null_, T1)(lazy T1 lhs, Fence _ = Fence(), string file = __FILE__, size_t line = __LINE__) {
