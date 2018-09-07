@@ -6,6 +6,7 @@ enum equal;
 enum less;
 enum greater;
 enum contain;
+enum match;
 enum throw_;
 
 final class ExpectException : Exception {
@@ -186,6 +187,32 @@ unittest {
 		.expect!contain('!')
 		.expect!contain(',')
 		.expect!contain(' ');
+}
+
+auto expect(OP, T1)(lazy T1 lhs, string re, Fence _ = Fence(), string file = __FILE__, size_t line = __LINE__)
+if(is(OP == match) && __traits(compiles, {import std.regex : matchFirst; matchFirst(lhs, re);})) {
+	import std.regex : matchFirst;
+	if(lhs.matchFirst(re).empty)
+		throw new ExpectException(
+			"value matching `%s` is expected, got `%s`".format(re, lhs),
+			file,
+			line,
+		);
+
+	return lhs;
+}
+
+@("expect!match")
+unittest {
+	"12345".expect!match(r"\d\d\d\d\d");
+	"abc".expect!match(r"\w{3}");
+}
+
+@("expect!match checks can be chained")
+unittest {
+	"123abc".expect!match(r"\d\d\d\w\w\w")
+		.expect!match(r"\d{3}.*")
+		.expect!match(r"[1-3]+[a-c]+");
 }
 
 auto expect(OP, E : Exception = Exception, T1)(lazy T1 lhs, Fence _ = Fence(), string file = __FILE__, size_t line = __LINE__)
