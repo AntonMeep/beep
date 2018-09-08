@@ -141,8 +141,7 @@ unittest {
 		1.expect!less(2)
 			.expect!less(3)
 			.expect!less(4)
-			.expect!less(0)
-			.expect!less(5);
+			.expect!less(0);
 	}).expect!(throw_, ExpectException)
 		.message.expect!contain("value less than `0` is expected, got `1`");
 }
@@ -180,8 +179,7 @@ unittest {
 	({
 		1.expect!greater(0)
 			.expect!greater(-1)
-			.expect!greater(2)
-			.expect!greater(-3);
+			.expect!greater(2);
 	}).expect!(throw_, ExpectException)
 		.message.expect!contain("value greater than `2` is expected, got `1`");
 }
