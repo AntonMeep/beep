@@ -293,7 +293,7 @@ if(is(OP == throw_) && __traits(compiles, {lhs(/+_+/)(/*_*/);})) {
 	}
 
 	throw new ExpectException(
-		"`%s` is expected to be thrown, but nothing has been thrown".format(typeid(E).name),
+		"`%s` is expected to be thrown but nothing has been thrown".format(typeid(E).name),
 		file,
 		line,
 	);
@@ -355,4 +355,14 @@ unittest {
 	}
 
 	success.expect!equal(true);
+}
+
+@("expect!throw_ fails when nothing has been thrown")
+unittest {
+	({
+		({
+			1.expect!true;
+		}).expect!throw_;
+	}).expect!(throw_, ExpectException)
+		.message.expect!contain("`object.Exception` is expected to be thrown but nothing has been thrown");
 }
