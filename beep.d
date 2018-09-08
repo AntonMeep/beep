@@ -74,6 +74,40 @@ unittest {
 		.message.expect!contain("`S(\"Bye!\", 43)` is expected, got `S(\"Hi!\", 42)`");
 }
 
+T1 expect(bool bool_, T1)(lazy T1 lhs, Fence _ = Fence(), string file = __FILE__, size_t line = __LINE__) {
+	return expect!(equal, T1)(lhs, bool_, _, file, line);
+}
+
+@("expect!(true|false) - convenience wrapper around expect!equal")
+unittest {
+	1.expect!true;
+	0.expect!false;
+}
+
+@("expect!(true|false) checks can be chained")
+unittest {
+	1.expect!true
+		.expect!true
+		.expect!true;
+
+	0.expect!false
+		.expect!false
+		.expect!false;
+}
+
+@("expect!(true|false) fails if value is not true|false")
+unittest {
+	({
+		0.expect!true;
+	}).expect!(throw_, ExpectException)
+		.message.expect!contain("`true` is expected, got `0`");
+
+	({
+		1.expect!false;
+	}).expect!(throw_, ExpectException)
+		.message.expect!contain("`false` is expected, got `1`");
+}
+
 T1 expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, Fence _ = Fence(), string file = __FILE__, size_t line = __LINE__)
 if(is(OP == less) && __traits(compiles, lhs < rhs)) {
 	if(!(lhs < rhs))
