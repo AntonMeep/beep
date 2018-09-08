@@ -1,3 +1,7 @@
 dmd:
   image: ohboi/minidmd
   script: dub test
+
+ldc:
+  image: ohboi/minildc
+  script: dub test
