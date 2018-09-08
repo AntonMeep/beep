@@ -328,7 +328,7 @@ if(is(OP == throw_) && __traits(compiles, {lhs(/+_+/)(/*_*/);})) {
 
 @("expect!throw_")
 unittest {
-	(() @safe {
+	(() {
 		throw new Exception("Hello!");
 	}).expect!throw_;
 }
