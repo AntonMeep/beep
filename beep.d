@@ -51,7 +51,7 @@ unittest {
 		.expect!equal(1);
 }
 
-@("expect!equal fails if two values are not equal")
+@("expect!equal fails if value is not equal to expected value")
 unittest {
 	({
 		1.expect!equal(2);
