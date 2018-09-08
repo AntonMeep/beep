@@ -152,15 +152,13 @@ unittest {
 		.message.expect!contain("value greater than `2` is expected, got `1`");
 }
 
-T1 expect(typeof(null) null_, T1)(lazy T1 lhs, Fence _ = Fence(), string file = __FILE__, size_t line = __LINE__) {
+void expect(typeof(null) null_, T1)(lazy T1 lhs, Fence _ = Fence(), string file = __FILE__, size_t line = __LINE__) {
 	if(lhs !is null)
 		throw new ExpectException(
 			"null is expected, got `%s`".format(lhs),
 			file,
 			line,
 		);
-
-	return lhs;
 }
 
 @("expect!null")
