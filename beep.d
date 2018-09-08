@@ -203,12 +203,28 @@ unittest {
 	null.expect!null;
 }
 
+@("expect!null fails if value is not null")
+unittest {
+	({
+		void delegate() func = () {};
+
+		func.expect!null;
+	}).expect!(throw_, ExpectException)
+		.message.expect!contain("null is expected, got `void delegate()`");
+
+	({
+		auto v = true;
+		(&v).expect!null;
+	}).expect!(throw_, ExpectException)
+		.message.expect!match("null is expected, got `.*`");
+}
+
 auto expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, Fence _ = Fence(), string file = __FILE__, size_t line = __LINE__)
 if(is(OP == contain) && __traits(compiles, {import std.algorithm.searching : canFind; lhs.canFind(rhs);})) {
 	import std.algorithm.searching : canFind;
 	if(!lhs.canFind(rhs))
 		throw new ExpectException(
-			"`%s` is expected to be found in `%s`".format(rhs, lhs),
+			"value is expected to contain `%s`, got `%s`".format(rhs, lhs),
 			file,
 			line,
 		);
@@ -230,6 +246,19 @@ unittest {
 		.expect!contain('!')
 		.expect!contain(',')
 		.expect!contain(' ');
+}
+
+@("expect!contain fails if value does not contain expected data")
+unittest {
+	({
+		"Hello, World!".expect!contain("Hi!");
+	}).expect!(throw_, ExpectException)
+		.message.expect!contain("value is expected to contain `Hi!`, got `Hello, World!`");
+
+	({
+		[1,2,3].expect!contain(4);
+	}).expect!(throw_, ExpectException)
+		.message.expect!contain("value is expected to contain `4`, got `[1, 2, 3]`");
 }
 
 auto expect(OP, T1)(lazy T1 lhs, string re, Fence _ = Fence(), string file = __FILE__, size_t line = __LINE__)
