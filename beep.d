@@ -33,7 +33,7 @@ if(is(OP == equal) && __traits(compiles, lhs == rhs)) {
 }
 
 @("expect!equal")
-unittest {
+@safe pure unittest {
 	1.expect!equal(1);
 	"Hi!".expect!equal("Hi!");
 
@@ -45,7 +45,7 @@ unittest {
 }
 
 @("expect!equal checks can be chained")
-unittest {
+@safe pure unittest {
 	1.expect!equal(1)
 		.expect!equal(1)
 		.expect!equal(1);
@@ -79,13 +79,13 @@ T1 expect(bool bool_, T1)(lazy T1 lhs, Fence _ = Fence(), string file = __FILE__
 }
 
 @("expect!(true|false) - convenience wrapper around expect!equal")
-unittest {
+@safe pure unittest {
 	1.expect!true;
 	0.expect!false;
 }
 
 @("expect!(true|false) checks can be chained")
-unittest {
+@safe pure unittest {
 	1.expect!true
 		.expect!true
 		.expect!true;
@@ -121,13 +121,13 @@ if(is(OP == less) && __traits(compiles, lhs < rhs)) {
 }
 
 @("expect!less")
-unittest {
+@safe unittest {
 	1.expect!less(2);
-	1.expect!less(1.00001);
+	1.0.expect!less(1.00001);
 }
 
 @("expect!less checks can be chained")
-unittest {
+@safe pure unittest {
 	1.expect!less(2)
 		.expect!less(3)
 		.expect!less(4)
@@ -159,13 +159,13 @@ if(is(OP == greater) && __traits(compiles, lhs > rhs)) {
 }
 
 @("expect!greater")
-unittest {
+@safe unittest {
 	1.expect!greater(0);
 	1.001.expect!greater(1);
 }
 
 @("expect!greater checks can be chained")
-unittest {
+@safe pure unittest {
 	1.expect!greater(0)
 		.expect!greater(-1)
 		.expect!greater(-2)
@@ -194,7 +194,7 @@ void expect(typeof(null) null_, T1)(lazy T1 lhs, Fence _ = Fence(), string file 
 }
 
 @("expect!null")
-unittest {
+@safe pure unittest {
 	void delegate() func;
 	func.expect!null;
 
@@ -231,14 +231,14 @@ if(is(OP == contain) && __traits(compiles, {import std.algorithm.searching : can
 }
 
 @("expect!contain")
-unittest {
+@safe pure unittest {
 	"Hello, World!".expect!contain("World");
 	[1,2,3].expect!contain(1);
 	[[1,2],[2,3],[4,5]].expect!contain([1,2]);
 }
 
 @("expect!contain checks can be chained")
-unittest {
+@safe pure unittest {
 	"Hello, World!".expect!contain("World")
 		.expect!contain("Hello")
 		.expect!contain('!')
@@ -273,13 +273,13 @@ if(is(OP == match) && __traits(compiles, {import std.regex : matchFirst; matchFi
 }
 
 @("expect!match")
-unittest {
+@safe unittest {
 	"12345".expect!match(r"\d\d\d\d\d");
 	"abc".expect!match(r"\w{3}");
 }
 
 @("expect!match checks can be chained")
-unittest {
+@safe unittest {
 	"123abc".expect!match(r"\d\d\d\w\w\w")
 		.expect!match(r"\d{3}.*")
 		.expect!match(r"[1-3]+[a-c]+");
@@ -328,7 +328,7 @@ if(is(OP == throw_) && __traits(compiles, {lhs(/+_+/)(/*_*/);})) {
 
 @("expect!throw_")
 unittest {
-	({
+	(() @safe {
 		throw new Exception("Hello!");
 	}).expect!throw_;
 }
