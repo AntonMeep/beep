@@ -1,6 +1,6 @@
 {
 	"name": "beep",
-	"description": "",
+	"description": "Advanced assertions library",
 	"authors": [
 		"Anton Fediushin"
 	],
