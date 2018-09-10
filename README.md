@@ -17,8 +17,8 @@ unittest {
 API consists of different `expect` overloads which take 1 or 2 arguments and an operation to be performed on those arguments. Most of the `expect` overloads return first value passed to them (unless otherwise is noted), allowing you to perform multiple checks at once:
 
 ```D
-	1.expect!less(2)
-		.expect!greater(0);
+1.expect!less(2)
+	.expect!greater(0);
 ```
 
 ### `expect!(OP, T1, T2)(T1 a, T2 b) if(is(OP == equal))`
