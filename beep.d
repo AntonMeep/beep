@@ -184,13 +184,15 @@ unittest {
 		.message.expect!contain("value greater than `2` is expected, got `1`");
 }
 
-void expect(typeof(null) null_, T1)(lazy T1 lhs, Fence _ = Fence(), string file = __FILE__, size_t line = __LINE__) {
+T1 expect(typeof(null) null_, T1)(lazy T1 lhs, Fence _ = Fence(), string file = __FILE__, size_t line = __LINE__) {
 	if(lhs !is null)
 		throw new ExpectException(
 			"null is expected, got `%s`".format(lhs),
 			file,
 			line,
 		);
+
+	return lhs;
 }
 
 @("expect!null")
@@ -217,7 +219,7 @@ unittest {
 		.message.expect!match("null is expected, got `.*`");
 }
 
-auto expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, Fence _ = Fence(), string file = __FILE__, size_t line = __LINE__)
+T1 expect(OP, T1, T2)(lazy T1 lhs, lazy T2 rhs, Fence _ = Fence(), string file = __FILE__, size_t line = __LINE__)
 if(is(OP == contain) && __traits(compiles, {import std.algorithm.searching : canFind; lhs.canFind(rhs);})) {
 	import std.algorithm.searching : canFind;
 	if(!lhs.canFind(rhs))
@@ -259,7 +261,7 @@ unittest {
 		.message.expect!contain("value is expected to contain `4`, got `[1, 2, 3]`");
 }
 
-auto expect(OP, T1)(lazy T1 lhs, string re, Fence _ = Fence(), string file = __FILE__, size_t line = __LINE__)
+T1 expect(OP, T1)(lazy T1 lhs, string re, Fence _ = Fence(), string file = __FILE__, size_t line = __LINE__)
 if(is(OP == match) && __traits(compiles, {import std.regex : matchFirst; matchFirst(lhs, re);})) {
 	import std.regex : matchFirst;
 	if(lhs.matchFirst(re).empty)
