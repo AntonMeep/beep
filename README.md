@@ -3,6 +3,9 @@ beep [![Repository](https://img.shields.io/badge/repository-on%20GitLab-orange.s
 
 **beep** is an advanced assertion library which provides light and simple alternative to built-in `assert`s to be used in unit-tests.
 
+> Note that project's development happens on the [GitLab](https://gitlab.com/ohboi/beep).
+> GitHub repository is a mirror, it might *not* always be up-to-date.
+
 ```D
 version(unittest) import beep;
 
