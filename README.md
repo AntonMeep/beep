@@ -1,9 +1,13 @@
-beep [![Repository](https://img.shields.io/badge/repository-on%20GitLab-orange.svg)](https://gitlab.com/ohboi/beep) [![pipeline status](https://gitlab.com/ohboi/beep/badges/master/pipeline.svg)](https://gitlab.com/ohboi/beep/commits/master) [![coverage report](https://gitlab.com/ohboi/beep/badges/master/coverage.svg)](https://gitlab.com/ohboi/beep/commits/master) [![MIT Licence](https://img.shields.io/badge/licence-MIT-blue.svg)](https://gitlab.com/ohboi/beep/blob/master/LICENCE) [![Package version](https://img.shields.io/dub/v/beep.svg)](https://gitlab.com/ohboi/beep/tags)
+beep [![Repository](https://img.shields.io/badge/repository-on%20GitLab-orange.svg)](https://gitlab.com/AntonMeep/beep) [![pipeline 
+status](https://gitlab.com/AntonMeep/beep/badges/master/pipeline.svg)](https://gitlab.com/AntonMeep/beep/commits/master) [![coverage 
+report](https://gitlab.com/AntonMeep/beep/badges/master/coverage.svg)](https://gitlab.com/AntonMeep/beep/commits/master) [![MIT 
+Licence](https://img.shields.io/badge/licence-MIT-blue.svg)](https://gitlab.com/AntonMeep/beep/blob/master/LICENCE) [![Package 
+version](https://img.shields.io/dub/v/beep.svg)](https://gitlab.com/AntonMeep/beep/tags)
 =====
 
 **beep** is an advanced assertion library which provides light and simple alternative to built-in `assert`s to be used in unit-tests.
 
-> Note that project's development happens on the [GitLab](https://gitlab.com/ohboi/beep).
+> Note that project's development happens on the [GitLab](https://gitlab.com/AntonMeep/beep).
 > GitHub repository is a mirror, it might *not* always be up-to-date.
 
 ```D
